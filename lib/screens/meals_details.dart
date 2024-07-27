@@ -23,7 +23,19 @@ class MealsDetails extends ConsumerWidget {
         ),
         actions: [
           IconButton(
-            icon: Icon(!isFavorite ? Icons.star_outline : Icons.star),
+            icon: AnimatedSwitcher(
+              transitionBuilder: (child, animation) {
+                return RotationTransition(
+                  turns: Tween(begin: 0.8, end: 1.0).animate(animation),
+                  child: child,
+                );
+              },
+              duration: const Duration(milliseconds: 300),
+              child: Icon(
+                !isFavorite ? Icons.star_outline : Icons.star,
+                key: ValueKey(isFavorite),
+              ),
+            ),
             tooltip: 'Add To Favorites',
             onPressed: () {
               final isAdded =
@@ -51,8 +63,11 @@ class MealsDetails extends ConsumerWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Image(
-              image: NetworkImage(meal.imageUrl),
+            Hero(
+              tag: meal.id,
+              child: Image(
+                image: NetworkImage(meal.imageUrl),
+              ),
             ),
             const SizedBox(
               height: 20,
